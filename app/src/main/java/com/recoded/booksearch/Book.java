@@ -47,10 +47,7 @@ public class Book implements Parcelable{
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
+     
     public URL getImgUrl() {
         return imgUrl;
     }
