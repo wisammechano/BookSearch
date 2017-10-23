@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        tools:context="com.recoded.booksearch.MainActivity">
+
+        <LinearLayout
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/search_field"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:drawableLeft="@drawable/ic_search_black_16dp"
+                android:drawablePadding="8dp"
+                android:hint="Search Google Books"
+                android:textSize="16sp"/>
+
+            <Button
+                android:id="@+id/search_button"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="GO"/>
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+        <ListView
+            android:id="@+id/result_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_bar"
+            android:visibility="visible">
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/no_result"
+            android:layout_below="@id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your search query had no results, try different keyword, for example, Java"
+            android:textSize="18sp"
+            android:visibility="gone"/>
+
+
+    </RelativeLayout>
+</layout>
