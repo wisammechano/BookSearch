@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,11 @@ import java.util.List;
 class BookListAdapter extends ArrayAdapter {
     ArrayList<Book> books;
 
+    public BookListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List objects) {
+        super(context, resource, objects);
+        books = (ArrayList<Book>) objects;
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -38,12 +42,7 @@ class BookListAdapter extends ArrayAdapter {
         return convertView;
     }
 
-    public BookListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List objects) {
-        super(context, resource, objects);
-        books = (ArrayList<Book>) objects;
-    }
-
-    public void resetCollection(ArrayList<Book> books){
+    public void resetCollection(ArrayList<Book> books) {
         this.books = books;
     }
 

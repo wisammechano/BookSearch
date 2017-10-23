@@ -3,14 +3,13 @@ package com.recoded.booksearch;
 import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
-import android.net.Uri;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.recoded.booksearch.databinding.ActivityMainBinding;
@@ -27,19 +26,23 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     ArrayList<Book> books;
     int scrollY;
-    BookListAdapter adapter=null;
+    BookListAdapter adapter = null;
+
+    private static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             books = savedInstanceState.getParcelableArrayList("Data");
             scrollY = savedInstanceState.getInt("Scroll");
             populateList();
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void parseJson(String s) {
-        if(s.isEmpty()){
+        if (s.isEmpty()) {
             Toast.makeText(this, "Please check your internet connection, no response from server!", Toast.LENGTH_LONG).show();
             return;
         }
@@ -133,11 +136,12 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        if (!connectivityManager.getActiveNetworkInfo().isConnected()) {
-            Toast.makeText(this, "Connect to internet and try again!", Toast.LENGTH_LONG).show();
-            return false;
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+            return true;
         }
-        return true;
+        Toast.makeText(this, "Connect to internet and try again!", Toast.LENGTH_LONG).show();
+        return false;
     }
 
     @Override
@@ -150,10 +154,7 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putInt("Scroll", binding.resultListView.getScrollY());
         // etc.
     }
-    private static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
+
     private class ApiSearcher extends AsyncTask<String, String, String> {
         URL url;
 
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 httpUrlConnection.setConnectTimeout(5000);
                 httpUrlConnection.setReadTimeout(5000);
                 httpUrlConnection.connect();
-                if(httpUrlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                if (httpUrlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     inputStream = httpUrlConnection.getInputStream();
                     InputStreamReader inputReader = new InputStreamReader(inputStream);
                     BufferedReader bufferReader = new BufferedReader(inputReader);

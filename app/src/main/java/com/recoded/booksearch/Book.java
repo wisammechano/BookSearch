@@ -7,29 +7,47 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class Book implements Parcelable{
+public class Book implements Parcelable {
 
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel source) {
+            return new Book(source);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
     private String title;
     private ArrayList<String> authors;
     private URL imgUrl;
     private String desc;
 
-    public Book(String title){
+    public Book(String title) {
         this.title = title;
         authors = new ArrayList<>();
     }
 
-    public void addAuthor(String author){
+    protected Book(Parcel in) {
+        this.title = in.readString();
+        this.authors = in.createStringArrayList();
+        this.imgUrl = (URL) in.readSerializable();
+        this.desc = in.readString();
+    }
+
+    public void addAuthor(String author) {
         this.authors.add(author);
     }
 
-    public ArrayList<String> getAuthors(){
+    public ArrayList<String> getAuthors() {
         return authors;
     }
 
-    public String getAuthorsString(){
+    public String getAuthorsString() {
         String retString = "By";
-        for (String author : authors){
+        for (String author : authors) {
             retString += ", " + author;
         }
         return retString;
@@ -39,7 +57,7 @@ public class Book implements Parcelable{
         return desc;
     }
 
-    public void setDesc(String desc){
+    public void setDesc(String desc) {
         this.desc = desc;
     }
 
@@ -47,7 +65,6 @@ public class Book implements Parcelable{
         return title;
     }
 
-     
     public URL getImgUrl() {
         return imgUrl;
     }
@@ -72,23 +89,4 @@ public class Book implements Parcelable{
         dest.writeSerializable(this.imgUrl);
         dest.writeString(this.desc);
     }
-
-    protected Book(Parcel in) {
-        this.title = in.readString();
-        this.authors = in.createStringArrayList();
-        this.imgUrl = (URL) in.readSerializable();
-        this.desc = in.readString();
-    }
-
-    public static final Creator<Book> CREATOR = new Creator<Book>() {
-        @Override
-        public Book createFromParcel(Parcel source) {
-            return new Book(source);
-        }
-
-        @Override
-        public Book[] newArray(int size) {
-            return new Book[size];
-        }
-    };
 }
